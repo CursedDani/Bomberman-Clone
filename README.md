@@ -4,6 +4,9 @@
 ![Platform](https://img.shields.io/badge/Platform-Nand2Tetris-green)
 ![Status](https://img.shields.io/badge/Status-Complete-success)
 
+## Sustentación
+https://youtu.be/kWT2HjggeUc
+
 ## Descripción
 
 Implementación del clásico juego Bomberman en lenguaje Jack para la plataforma Nand2Tetris. El jugador controla un personaje que debe destruir todas las rocas del mapa usando bombas, mientras evita ser atrapado por enemigos en movimiento o por las explosiones de sus propias bombas.
