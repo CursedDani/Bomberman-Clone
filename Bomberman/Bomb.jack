@@ -1,0 +1,189 @@
+// Bomb.jack
+class Bomb {
+    field int x, y;
+    field int timer;
+    field int maxTimer;
+    field boolean active;
+    field boolean exploding;
+    field int explosionTimer;
+    
+    constructor Bomb new(int posX, int posY) {
+        let x = posX;
+        let y = posY;
+        let timer = 0;
+        let maxTimer = 20; // About 1 second at 50ms per frame
+        let active = false;
+        let exploding = false;
+        let explosionTimer = 0;
+        return this;
+    }
+    
+    method void dispose() {
+        do Memory.deAlloc(this);
+        return;
+    }
+    
+    method void activate(int posX, int posY) {
+        let x = posX;
+        let y = posY;
+        let timer = 0;
+        let active = true;
+        let exploding = false;
+        let explosionTimer = 0;
+        return;
+    }
+    
+    method void deactivate() {
+        if (active | exploding) {
+            do erase();
+        }
+        let active = false;
+        let exploding = false;
+        let timer = 0;
+        let explosionTimer = 0;
+        return;
+    }
+    
+    method boolean isActive() {
+        return active;
+    }
+    
+    method boolean isExploding() {
+        return exploding;
+    }
+    
+    method int getX() {
+        return x;
+    }
+    
+    method int getY() {
+        return y;
+    }
+    
+    method void update() {
+        if (active & (~exploding)) {
+            let timer = timer + 1;
+            
+            if (timer > maxTimer) {
+                let exploding = true;
+                let active = false;
+                let explosionTimer = 0;
+                do drawExplosion();
+            }
+        }
+        
+        if (exploding) {
+            let explosionTimer = explosionTimer + 1;
+            if (explosionTimer > 10) { // Explosion lasts about 0.5 seconds
+                do eraseExplosion();
+                let exploding = false;
+            }
+        }
+        return;
+    }
+    
+    method void draw() {
+        var int screenX, screenY;
+        
+        if (active & (~exploding)) {
+            let screenX = (x * 16) + 8;
+            let screenY = (y * 16) + 8;
+            
+            do Screen.setColor(true);
+            // Draw bomb as a circle
+            do Screen.drawCircle(screenX + 6, screenY + 6, 5);
+        }
+        return;
+    }
+    
+    method void erase() {
+        var int screenX, screenY;
+        let screenX = (x * 16) + 8;
+        let screenY = (y * 16) + 8;
+        
+        do Screen.setColor(false);
+        do Screen.drawRectangle(screenX, screenY, screenX + 12, screenY + 12);
+        return;
+    }
+    
+    method void drawExplosion() {
+        var int i, j;
+        var int screenX, screenY;
+        
+        do Screen.setColor(true);
+        
+        // Draw 3x3 explosion grid
+        let i = x - 1;
+        while (~(i > (x + 1))) {
+            let j = y - 1;
+            while (~(j > (y + 1))) {
+                if ((i > 0) & (i < 31) & (j > 0) & (j < 15)) {
+                    let screenX = (i * 16) + 8;
+                    let screenY = (j * 16) + 8;
+                    do Screen.drawRectangle(screenX + 2, screenY + 2, screenX + 10, screenY + 10);
+                }
+                let j = j + 1;
+            }
+            let i = i + 1;
+        }
+        return;
+    }
+    
+    method void eraseExplosion() {
+        var int i, j;
+        var int screenX, screenY;
+        
+        do Screen.setColor(false);
+        
+        // Erase 3x3 explosion grid
+        let i = x - 1;
+        while (~(i > (x + 1))) {
+            let j = y - 1;
+            while (~(j > (y + 1))) {
+                if ((i > 0) & (i < 31) & (j > 0) & (j < 15)) {
+                    let screenX = (i * 16) + 8;
+                    let screenY = (j * 16) + 8;
+                    do Screen.drawRectangle(screenX, screenY, screenX + 12, screenY + 12);
+                }
+                let j = j + 1;
+            }
+            let i = i + 1;
+        }
+        return;
+    }
+    
+    method int getExplosionData(int index) {
+        // Returns explosion grid coordinates
+        // index 0-8 represents the 9 positions in 3x3 grid
+        var int dx, dy;
+        let dx = (index / 3) - 1;
+        let dy = (index - ((index / 3) * 3)) - 1;
+        
+        if (index < 9) {
+            return ((x + dx) * 100) + (y + dy);
+        }
+        return -1;
+    }
+    
+    method boolean isExplosionAt(int checkX, int checkY) {
+        var int i, j;
+        
+        if (~exploding) {
+            return false;
+        }
+        
+        // Check if position is in 3x3 explosion grid
+        let i = x - 1;
+        while (~(i > (x + 1))) {
+            let j = y - 1;
+            while (~(j > (y + 1))) {
+                if ((checkX = i) & (checkY = j)) {
+                    return true;
+                }
+                let j = j + 1;
+            }
+            let i = i + 1;
+        }
+        return false;
+    }
+}

@@ -1,0 +1,126 @@
+// BombManager.jack
+class BombManager {
+    field Array bombs;
+    field int maxBombs;
+    
+    constructor BombManager new() {
+        var int i;
+        let maxBombs = 5;
+        let bombs = Array.new(maxBombs);
+        
+        let i = 0;
+        while (i < maxBombs) {
+            let bombs[i] = Bomb.new(0, 0);
+            let i = i + 1;
+        }
+        return this;
+    }
+    
+    method void dispose() {
+        var int i;
+        var Bomb bomb;
+        
+        let i = 0;
+        while (i < maxBombs) {
+            let bomb = bombs[i];
+            do bomb.dispose();
+            let i = i + 1;
+        }
+        do bombs.dispose();
+        do Memory.deAlloc(this);
+        return;
+    }
+    
+    method void reset() {
+        var int i;
+        var Bomb bomb;
+        
+        let i = 0;
+        while (i < maxBombs) {
+            let bomb = bombs[i];
+            do bomb.deactivate();
+            let i = i + 1;
+        }
+        return;
+    }
+    
+    method void placeBomb(int x, int y) {
+        var int i;
+        var Bomb bomb;
+        var boolean placed;
+        
+        let placed = false;
+        let i = 0;
+        
+        // Find inactive bomb slot
+        while ((i < maxBombs) & (~placed)) {
+            let bomb = bombs[i];
+            if (~(bomb.isActive() | bomb.isExploding())) {
+                do bomb.activate(x, y);
+                let placed = true;
+            }
+            let i = i + 1;
+        }
+        return;
+    }
+    
+    method void update() {
+        var int i;
+        var Bomb bomb;
+        
+        let i = 0;
+        while (i < maxBombs) {
+            let bomb = bombs[i];
+            if (bomb.isActive()) {
+                do bomb.draw();
+            }
+            if (bomb.isActive() | bomb.isExploding()) {
+                do bomb.update();
+            }
+            let i = i + 1;
+        }
+        return;
+    }
+    
+    method Array getExplodingBombs() {
+        return bombs;
+    }
+    
+    method int getMaxBombs() {
+        return maxBombs;
+    }
+    
+    method boolean isBombAt(int x, int y) {
+        var int i;
+        var Bomb bomb;
+        
+        let i = 0;
+        while (i < maxBombs) {
+            let bomb = bombs[i];
+            if (bomb.isActive()) {
+                if ((bomb.getX() = x) & (bomb.getY() = y)) {
+                    return true;
+                }
+            }
+            let i = i + 1;
+        }
+        return false;
+    }
+    
+    method boolean isExplosionAt(int x, int y) {
+        var int i;
+        var Bomb bomb;
+        
+        let i = 0;
+        while (i < maxBombs) {
+            let bomb = bombs[i];
+            if (bomb.isExploding()) {
+                if (bomb.isExplosionAt(x, y)) {
+                    return true;
+                }
+            }
+            let i = i + 1;
+        }
+        return false;
+    }
+}

@@ -1,0 +1,73 @@
+// Rock.jack
+class Rock {
+    field int x, y;
+    field boolean active;
+    
+    constructor Rock new(int posX, int posY) {
+        let x = posX;
+        let y = posY;
+        let active = true;
+        return this;
+    }
+    
+    method void dispose() {
+        do Memory.deAlloc(this);
+        return;
+    }
+    
+    method int getX() {
+        return x;
+    }
+    
+    method int getY() {
+        return y;
+    }
+    
+    method boolean isActive() {
+        return active;
+    }
+    
+    method void setActive(boolean state) {
+        let active = state;
+        return;
+    }
+    
+    method void reset() {
+        let active = true;
+        return;
+    }
+    
+    method void draw() {
+        var int screenX, screenY;
+        
+        if (active) {
+            let screenX = (x * 16) + 8;
+            let screenY = (y * 16) + 8;
+            
+            do Screen.setColor(true);
+            do Screen.drawRectangle(screenX + 1, screenY + 1, screenX + 11, screenY + 11);
+            do Screen.setColor(false);
+            do Screen.drawRectangle(screenX + 3, screenY + 3, screenX + 5, screenY + 5);
+            do Screen.drawRectangle(screenX + 7, screenY + 7, screenX + 9, screenY + 9);
+        }
+        return;
+    }
+    
+    method void erase() {
+        var int screenX, screenY;
+        let screenX = (x * 16) + 8;
+        let screenY = (y * 16) + 8;
+        
+        do Screen.setColor(false);
+        do Screen.drawRectangle(screenX, screenY, screenX + 12, screenY + 12);
+        return;
+    }
+    
+    method void destroy() {
+        if (active) {
+            do erase();
+            let active = false;
+        }
+        return;
+    }
+}
