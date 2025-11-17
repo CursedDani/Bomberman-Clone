@@ -64,7 +64,7 @@ Bomberman/
 ### Usando la Interfaz Gráfica de Nand2Tetris (Online IDE)
 
 1. **Abre el Jack Compiler:**
-   - Desde el IDE de nand2tetris ir a la sección de Jack compiler.
+   - Desde el IDE de nand2tetris ir a la sección de [Jack compiler](https://nand2tetris.github.io/web-ide/compiler).
 
 2. **Compila el proyecto:**
    - Haz clic en la carpeta que aparece al lado de **"Source"**
