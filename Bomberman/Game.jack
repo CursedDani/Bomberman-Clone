@@ -6,7 +6,7 @@ class Game {
     field Array enemyManagerData; // [0] = EnemyManager reference
     field boolean gameOver;
     field boolean won;
-    
+
     constructor Game new() {
         let player = Player.new(8, 8);
         let bombManagerData = Array.new(1);
@@ -19,16 +19,16 @@ class Game {
         let won = false;
         return this;
     }
-    
+
     method void dispose() {
         var BombManager bm;
         var RockManager rm;
         var EnemyManager em;
-        
+
         let bm = bombManagerData[0];
         let rm = rockManagerData[0];
         let em = enemyManagerData[0];
-        
+
         do player.dispose();
         do bm.dispose();
         do rm.dispose();
@@ -39,16 +39,16 @@ class Game {
         do Memory.deAlloc(this);
         return;
     }
-    
+
     method void handleEnemyDestruction(BombManager bombManager, EnemyManager enemyManager) {
         var Array bombs;
         var Bomb bomb;
         var int i, j, k, explosionX, explosionY, coord;
         var int maxBombs;
-        
+
         let bombs = bombManager.getExplodingBombs();
         let maxBombs = bombManager.getMaxBombs();
-        
+
         let i = 0;
         while (i < maxBombs) {
             let bomb = bombs[i];
@@ -69,16 +69,16 @@ class Game {
         }
         return;
     }
-    
+
     method void movePlayerUp() {
         var int newY;
         var RockManager rockManager;
         var EnemyManager enemyManager;
-        
+
         let rockManager = rockManagerData[0];
         let enemyManager = enemyManagerData[0];
         let newY = player.getY() - 1;
-        
+
         if ((newY > 0) & (~rockManager.hasRockAt(player.getX(), newY))) {
             do player.moveUp();
             if (enemyManager.checkCollision(player.getX(), player.getY())) {
@@ -88,16 +88,16 @@ class Game {
         }
         return;
     }
-    
+
     method void movePlayerDown() {
         var int newY;
         var RockManager rockManager;
         var EnemyManager enemyManager;
-        
+
         let rockManager = rockManagerData[0];
         let enemyManager = enemyManagerData[0];
         let newY = player.getY() + 1;
-        
+
         if ((newY < 15) & (~rockManager.hasRockAt(player.getX(), newY))) {
             do player.moveDown();
             if (enemyManager.checkCollision(player.getX(), player.getY())) {
@@ -107,16 +107,16 @@ class Game {
         }
         return;
     }
-    
+
     method void movePlayerLeft() {
         var int newX;
         var RockManager rockManager;
         var EnemyManager enemyManager;
-        
+
         let rockManager = rockManagerData[0];
         let enemyManager = enemyManagerData[0];
         let newX = player.getX() - 1;
-        
+
         if ((newX > 0) & (~rockManager.hasRockAt(newX, player.getY()))) {
             do player.moveLeft();
             if (enemyManager.checkCollision(player.getX(), player.getY())) {
@@ -126,16 +126,16 @@ class Game {
         }
         return;
     }
-    
+
     method void movePlayerRight() {
         var int newX;
         var RockManager rockManager;
         var EnemyManager enemyManager;
-        
+
         let rockManager = rockManagerData[0];
         let enemyManager = enemyManagerData[0];
         let newX = player.getX() + 1;
-        
+
         if ((newX < 31) & (~rockManager.hasRockAt(newX, player.getY()))) {
             do player.moveRight();
             if (enemyManager.checkCollision(player.getX(), player.getY())) {
@@ -145,16 +145,16 @@ class Game {
         }
         return;
     }
-    
+
     method void handleRockDestruction(BombManager bombManager, RockManager rockManager) {
         var Array bombs;
         var Bomb bomb;
         var int i, j, k, x, y, explosionX, explosionY, coord;
         var int maxBombs;
-        
+
         let bombs = bombManager.getExplodingBombs();
         let maxBombs = bombManager.getMaxBombs();
-        
+
         let i = 0;
         while (i < maxBombs) {
             let bomb = bombs[i];
@@ -175,7 +175,7 @@ class Game {
         }
         return;
     }
-    
+
     method void run() {
         var char key;
         var boolean exit;
@@ -183,18 +183,18 @@ class Game {
         var BombManager bombManager;
         var RockManager rockManager;
         var EnemyManager enemyManager;
-        
+
         let bombManager = bombManagerData[0];
         let rockManager = rockManagerData[0];
         let enemyManager = enemyManagerData[0];
         let exit = false;
-        
+
         do Screen.clearScreen();
         do drawBorder();
         do rockManager.draw();
         do enemyManager.draw();
         do player.draw();
-        
+
         while (~exit) {
             // Wait for key press
             while ((key = 0) & (~gameOver)) {
@@ -203,31 +203,31 @@ class Game {
                 do enemyManager.update(rockManagerData);
                 do handleRockDestruction(bombManager, rockManager);
                 do handleEnemyDestruction(bombManager, enemyManager);
-                
+
                 // Check if player is on a bomb and update sprite
                 let playerX = player.getX();
                 let playerY = player.getY();
-                
+
                 if (bombManager.isBombAt(playerX, playerY)) {
                     do player.erase();
                     do player.drawOnBomb();
                 }
-                
+
                 // Check if player hit enemy
                 if (enemyManager.checkCollision(playerX, playerY)) {
                     let gameOver = true;
                     let won = false;
                 }
-                
+
                 // Check if player is in bomb explosion
                 if (bombManager.isExplosionAt(playerX, playerY)) {
                     let gameOver = true;
                     let won = false;
                 }
-                
+
                 do Sys.wait(50);
             }
-            
+
             if (gameOver) {
                 do showGameOver();
                 let exit = true;
@@ -243,7 +243,7 @@ class Game {
                     do bombManager.placeBomb(playerX, playerY);
                 }
                 if (key = 81) { let exit = true; } // Q to quit
-                
+
                 // Wait for key release
                 while (~(key = 0) & (~gameOver)) {
                     let key = Keyboard.keyPressed();
@@ -251,28 +251,28 @@ class Game {
                     do enemyManager.update(rockManagerData);
                     do handleRockDestruction(bombManager, rockManager);
                     do handleEnemyDestruction(bombManager, enemyManager);
-                    
+
                     let playerX = player.getX();
                     let playerY = player.getY();
-                    
+
                     if (bombManager.isBombAt(playerX, playerY)) {
                         do player.erase();
                         do player.drawOnBomb();
                     }
-                    
+
                     if (enemyManager.checkCollision(playerX, playerY)) {
                         let gameOver = true;
                         let won = false;
                     }
-                    
+
                     if (bombManager.isExplosionAt(playerX, playerY)) {
                         let gameOver = true;
                         let won = false;
                     }
-                    
+
                     do Sys.wait(50);
                 }
-                
+
                 // Check win condition
                 if (rockManager.allDestroyed()) {
                     let gameOver = true;
@@ -284,7 +284,7 @@ class Game {
         }
         return;
     }
-    
+
     method void drawBorder() {
         do Screen.setColor(true);
         do Screen.drawRectangle(0, 0, 511, 4);      // top
@@ -294,7 +294,7 @@ class Game {
         do drawControls();
         return;
     }
-    
+
     method void drawControls() {
         do Screen.setColor(true);
         do Output.moveCursor(21, 1);
@@ -303,7 +303,7 @@ class Game {
         do Output.printString("SPACE: Bomb");
         return;
     }
-    
+
     method void showGameOver() {
         do Screen.setColor(true);
         do Screen.drawRectangle(150, 100, 360, 140);
@@ -314,7 +314,7 @@ class Game {
         do Output.printString("GAME OVER!");
         return;
     }
-    
+
     method void showVictory() {
         do Screen.setColor(true);
         do Screen.drawRectangle(150, 100, 360, 140);
@@ -325,14 +325,14 @@ class Game {
         do Output.printString("YOU WIN!");
         return;
     }
-    
+
     method void restart() {
         var BombManager bombManager;
         var RockManager rockManager;
-        
+
         let bombManager = bombManagerData[0];
         let rockManager = rockManagerData[0];
-        
+
         do Screen.clearScreen();
         do player.reset(8, 8);
         do bombManager.reset();

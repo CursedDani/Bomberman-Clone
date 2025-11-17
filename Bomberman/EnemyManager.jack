@@ -2,25 +2,25 @@
 class EnemyManager {
     field Array enemies;
     field int numEnemies;
-    
+
     constructor EnemyManager new() {
         let numEnemies = 4;
         let enemies = Array.new(numEnemies);
-        
+
         // Create enemies with different patterns and positions
         // Positioned to avoid initial rock positions (5,10,15,20,25 on rows 3,7,11)
         let enemies[0] = Enemy.new(18, 5, 0);  // Horizontal in middle (safe row)
         let enemies[1] = Enemy.new(3, 5, 1);   // Vertical on left (safe column)
         let enemies[2] = Enemy.new(28, 5, 1);  // Vertical on right (safe column)
         let enemies[3] = Enemy.new(12, 9, 2);  // Square pattern (safe area)
-        
+
         return this;
     }
-    
+
     method void dispose() {
         var int i;
         var Enemy enemy;
-        
+
         let i = 0;
         while (i < numEnemies) {
             let enemy = enemies[i];
@@ -31,29 +31,29 @@ class EnemyManager {
         do Memory.deAlloc(this);
         return;
     }
-    
+
     method void reset() {
         var Enemy enemy;
-        
+
         let enemy = enemies[0];
         do enemy.reset(18, 5, 0);
-        
+
         let enemy = enemies[1];
         do enemy.reset(3, 5, 1);
-        
+
         let enemy = enemies[2];
         do enemy.reset(28, 5, 1);
-        
+
         let enemy = enemies[3];
         do enemy.reset(12, 9, 2);
-        
+
         return;
     }
-    
+
     method void draw() {
         var int i;
         var Enemy enemy;
-        
+
         let i = 0;
         while (i < numEnemies) {
             let enemy = enemies[i];
@@ -62,11 +62,11 @@ class EnemyManager {
         }
         return;
     }
-    
+
     method void update(Array rockManagerData) {
         var int i;
         var Enemy enemy;
-        
+
         let i = 0;
         while (i < numEnemies) {
             let enemy = enemies[i];
@@ -77,11 +77,11 @@ class EnemyManager {
         }
         return;
     }
-    
+
     method boolean checkCollision(int playerX, int playerY) {
         var int i;
         var Enemy enemy;
-        
+
         let i = 0;
         while (i < numEnemies) {
             let enemy = enemies[i];
@@ -94,11 +94,11 @@ class EnemyManager {
         }
         return false;
     }
-    
+
     method void destroyEnemyAt(int x, int y) {
         var int i;
         var Enemy enemy;
-        
+
         let i = 0;
         while (i < numEnemies) {
             let enemy = enemies[i];

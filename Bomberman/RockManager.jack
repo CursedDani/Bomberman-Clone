@@ -2,37 +2,37 @@
 class RockManager {
     field Array rocks;
     field int numRocks;
-    
+
     constructor RockManager new() {
         let numRocks = 15;
         let rocks = Array.new(numRocks);
-        
+
         // Create rocks at predetermined positions
         let rocks[0] = Rock.new(5, 3);
         let rocks[1] = Rock.new(10, 3);
         let rocks[2] = Rock.new(15, 3);
         let rocks[3] = Rock.new(20, 3);
         let rocks[4] = Rock.new(25, 3);
-        
+
         let rocks[5] = Rock.new(5, 7);
         let rocks[6] = Rock.new(10, 7);
         let rocks[7] = Rock.new(15, 7);
         let rocks[8] = Rock.new(20, 7);
         let rocks[9] = Rock.new(25, 7);
-        
+
         let rocks[10] = Rock.new(5, 11);
         let rocks[11] = Rock.new(10, 11);
         let rocks[12] = Rock.new(15, 11);
         let rocks[13] = Rock.new(20, 11);
         let rocks[14] = Rock.new(25, 11);
-        
+
         return this;
     }
-    
+
     method void dispose() {
         var int i;
         var Rock rock;
-        
+
         let i = 0;
         while (i < numRocks) {
             let rock = rocks[i];
@@ -43,11 +43,11 @@ class RockManager {
         do Memory.deAlloc(this);
         return;
     }
-    
+
     method void reset() {
         var int i;
         var Rock rock;
-        
+
         let i = 0;
         while (i < numRocks) {
             let rock = rocks[i];
@@ -56,11 +56,11 @@ class RockManager {
         }
         return;
     }
-    
+
     method void draw() {
         var int i;
         var Rock rock;
-        
+
         let i = 0;
         while (i < numRocks) {
             let rock = rocks[i];
@@ -69,11 +69,11 @@ class RockManager {
         }
         return;
     }
-    
+
     method void destroyRockAt(int x, int y) {
         var int i;
         var Rock rock;
-        
+
         let i = 0;
         while (i < numRocks) {
             let rock = rocks[i];
@@ -86,11 +86,11 @@ class RockManager {
         }
         return;
     }
-    
+
     method boolean allDestroyed() {
         var int i;
         var Rock rock;
-        
+
         let i = 0;
         while (i < numRocks) {
             let rock = rocks[i];
@@ -101,11 +101,11 @@ class RockManager {
         }
         return true;
     }
-    
+
     method boolean hasRockAt(int x, int y) {
         var int i;
         var Rock rock;
-        
+
         let i = 0;
         while (i < numRocks) {
             let rock = rocks[i];

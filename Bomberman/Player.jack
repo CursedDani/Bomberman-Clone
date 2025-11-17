@@ -2,27 +2,27 @@
 class Player {
     field int x, y;
     field int size;
-    
+
     constructor Player new(int startX, int startY) {
         let x = startX;
         let y = startY;
         let size = 12;
         return this;
     }
-    
+
     method void dispose() {
         do Memory.deAlloc(this);
         return;
     }
-    
+
     method int getX() {
         return x;
     }
-    
+
     method int getY() {
         return y;
     }
-    
+
     method void reset(int startX, int startY) {
         do erase();
         let x = startX;
@@ -30,47 +30,47 @@ class Player {
         do draw();
         return;
     }
-    
+
     method void draw() {
         var int screenX, screenY;
         let screenX = (x * 16) + 8;
         let screenY = (y * 16) + 8;
-        
+
         do Screen.setColor(true);
         // Draw bomberman character
         // Head (circle-ish)
         do Screen.drawRectangle(screenX + 4, screenY + 1, screenX + 8, screenY + 5);
         do Screen.drawRectangle(screenX + 3, screenY + 2, screenX + 9, screenY + 4);
-        
+
         // Eyes
         do Screen.setColor(false);
         do Screen.drawRectangle(screenX + 4, screenY + 3, screenX + 4, screenY + 3);
         do Screen.drawRectangle(screenX + 8, screenY + 3, screenX + 8, screenY + 3);
-        
+
         // Body
         do Screen.setColor(true);
         do Screen.drawRectangle(screenX + 4, screenY + 6, screenX + 8, screenY + 9);
-        
+
         // Arms
         do Screen.drawRectangle(screenX + 2, screenY + 6, screenX + 3, screenY + 8);
         do Screen.drawRectangle(screenX + 9, screenY + 6, screenX + 10, screenY + 8);
-        
+
         // Legs
         do Screen.drawRectangle(screenX + 4, screenY + 10, screenX + 5, screenY + 12);
         do Screen.drawRectangle(screenX + 7, screenY + 10, screenX + 8, screenY + 12);
         return;
     }
-    
+
     method void erase() {
         var int screenX, screenY;
         let screenX = (x * 16) + 8;
         let screenY = (y * 16) + 8;
-        
+
         do Screen.setColor(false);
         do Screen.drawRectangle(screenX, screenY, screenX + 12, screenY + 12);
         return;
     }
-    
+
     method void moveUp() {
         if (y > 1) {
             do erase();
@@ -79,7 +79,7 @@ class Player {
         }
         return;
     }
-    
+
     method void moveDown() {
         if (y < 14) {
             do erase();
@@ -88,7 +88,7 @@ class Player {
         }
         return;
     }
-    
+
     method void moveLeft() {
         if (x > 1) {
             do erase();
@@ -97,7 +97,7 @@ class Player {
         }
         return;
     }
-    
+
     method void moveRight() {
         if (x < 30) {
             do erase();
@@ -106,31 +106,31 @@ class Player {
         }
         return;
     }
-    
+
     method void drawOnBomb() {
         var int screenX, screenY;
         let screenX = (x * 16) + 8;
         let screenY = (y * 16) + 8;
-        
+
         do Screen.setColor(true);
         // Draw bomberman with raised arms (on bomb)
         // Head
         do Screen.drawRectangle(screenX + 4, screenY + 1, screenX + 8, screenY + 5);
         do Screen.drawRectangle(screenX + 3, screenY + 2, screenX + 9, screenY + 4);
-        
+
         // Eyes
         do Screen.setColor(false);
         do Screen.drawRectangle(screenX + 4, screenY + 3, screenX + 4, screenY + 3);
         do Screen.drawRectangle(screenX + 8, screenY + 3, screenX + 8, screenY + 3);
-        
+
         // Body
         do Screen.setColor(true);
         do Screen.drawRectangle(screenX + 4, screenY + 6, screenX + 8, screenY + 9);
-        
+
         // Arms raised up
         do Screen.drawRectangle(screenX + 2, screenY + 4, screenX + 3, screenY + 6);
         do Screen.drawRectangle(screenX + 9, screenY + 4, screenX + 10, screenY + 6);
-        
+
         // Legs
         do Screen.drawRectangle(screenX + 4, screenY + 10, screenX + 5, screenY + 12);
         do Screen.drawRectangle(screenX + 7, screenY + 10, screenX + 8, screenY + 12);

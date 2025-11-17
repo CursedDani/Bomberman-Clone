@@ -7,7 +7,7 @@ class Enemy {
     field boolean active;
     field int patternType; // 0=horizontal, 1=vertical, 2=square
     field int patternStep;
-    
+
     constructor Enemy new(int startX, int startY, int pattern) {
         let x = startX;
         let y = startY;
@@ -16,7 +16,7 @@ class Enemy {
         let moveDelay = 15; // Move every 15 frames
         let active = true;
         let patternStep = 0;
-        
+
         // Initialize direction based on pattern
         if (pattern = 0) { // Horizontal
             let dirX = 1;
@@ -30,27 +30,27 @@ class Enemy {
             let dirX = 1;
             let dirY = 0;
         }
-        
+
         return this;
     }
-    
+
     method void dispose() {
         do Memory.deAlloc(this);
         return;
     }
-    
+
     method int getX() {
         return x;
     }
-    
+
     method int getY() {
         return y;
     }
-    
+
     method boolean isActive() {
         return active;
     }
-    
+
     method void setActive(boolean state) {
         if (active & (~state)) {
             do erase();
@@ -58,7 +58,7 @@ class Enemy {
         let active = state;
         return;
     }
-    
+
     method void reset(int startX, int startY, int pattern) {
         do erase();
         let x = startX;
@@ -67,7 +67,7 @@ class Enemy {
         let moveCounter = 0;
         let patternStep = 0;
         let active = true;
-        
+
         if (pattern = 0) {
             let dirX = 1;
             let dirY = 0;
@@ -80,29 +80,29 @@ class Enemy {
             let dirX = 1;
             let dirY = 0;
         }
-        
+
         do draw();
         return;
     }
-    
+
     method void update(Array rockManagerData) {
         var int newX, newY;
         var RockManager rockManager;
-        
+
         if (~active) {
             return;
         }
-        
+
         let rockManager = rockManagerData[0];
         let moveCounter = moveCounter + 1;
-        
+
         if (moveCounter > moveDelay) {
             let moveCounter = 0;
-            
+
             // Calculate next position
             let newX = x + dirX;
             let newY = y + dirY;
-            
+
             // Check boundaries and rocks
             if ((newX < 1) | (newX > 30) | (newY < 1) | (newY > 14) | rockManager.hasRockAt(newX, newY)) {
                 do changeDirection();
@@ -115,22 +115,22 @@ class Enemy {
         }
         return;
     }
-    
+
     method void changeDirection() {
         if (patternType = 0) { // Horizontal - reverse
             let dirX = -dirX;
         }
-        
+
         if (patternType = 1) { // Vertical - reverse
             let dirY = -dirY;
         }
-        
+
         if (patternType = 2) { // Square pattern
             let patternStep = patternStep + 1;
             if (patternStep > 3) {
                 let patternStep = 0;
             }
-            
+
             if (patternStep = 0) { let dirX = 1; let dirY = 0; }  // Right
             if (patternStep = 1) { let dirX = 0; let dirY = 1; }  // Down
             if (patternStep = 2) { let dirX = -1; let dirY = 0; } // Left
@@ -138,41 +138,41 @@ class Enemy {
         }
         return;
     }
-    
+
     method void draw() {
         var int screenX, screenY;
-        
+
         if (~active) {
             return;
         }
-        
+
         let screenX = (x * 16) + 8;
         let screenY = (y * 16) + 8;
-        
+
         do Screen.setColor(true);
         // Draw enemy as a menacing figure
         // Body (rectangle)
         do Screen.drawRectangle(screenX + 3, screenY + 4, screenX + 9, screenY + 11);
-        
+
         // Eyes (two squares)
         do Screen.setColor(false);
         do Screen.drawRectangle(screenX + 4, screenY + 6, screenX + 5, screenY + 7);
         do Screen.drawRectangle(screenX + 7, screenY + 6, screenX + 8, screenY + 7);
-        
+
         // Spikes on top
         do Screen.setColor(true);
         do Screen.drawRectangle(screenX + 3, screenY + 2, screenX + 4, screenY + 3);
         do Screen.drawRectangle(screenX + 5, screenY + 1, screenX + 7, screenY + 3);
         do Screen.drawRectangle(screenX + 8, screenY + 2, screenX + 9, screenY + 3);
-        
+
         return;
     }
-    
+
     method void erase() {
         var int screenX, screenY;
         let screenX = (x * 16) + 8;
         let screenY = (y * 16) + 8;
-        
+
         do Screen.setColor(false);
         do Screen.drawRectangle(screenX, screenY, screenX + 12, screenY + 12);
         return;
